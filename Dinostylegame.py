@@ -14,6 +14,9 @@ Screen = pygame.display.set_mode((Screen_Width, Screen_Height))
 
 Running = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
            pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
+           
+''' Running = [pygame.image.load(os.path.join("Assets", "art.png")),
+           pygame.image.load(os.path.join("Assets", "art (1).png"))] '''
 
 Jumping = pygame.image.load(os.path.join("Assets/Dino", "DinoJump.png"))
 
