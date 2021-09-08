@@ -17,16 +17,18 @@ Running = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
 
 Jumping = pygame.image.load(os.path.join("Assets/Dino", "DinoJump.png"))
 
-Obstacle = [pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus1.png")),
-            pygame.image.load(os.path.join(
-                "Assets/Cactus", "LargeCactus2.png")),
-            pygame.image.load(os.path.join(
-                "Assets/Cactus", "LargeCactus3.png")),
-            pygame.image.load(os.path.join(
-                "Assets/Cactus", "SmallCactus1.png")),
-            pygame.image.load(os.path.join(
-                "Assets/Cactus", "SmallCactus2.png")),
-            pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus3.png"))]
+Dead = pygame.image.load(os.path.join("Assets/Dino", "DinoDead.png"))
+
+Obstacles = [pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus1.png")),
+             pygame.image.load(os.path.join(
+                 "Assets/Cactus", "LargeCactus2.png")),
+             pygame.image.load(os.path.join(
+                 "Assets/Cactus", "LargeCactus3.png")),
+             pygame.image.load(os.path.join(
+                 "Assets/Cactus", "SmallCactus1.png")),
+             pygame.image.load(os.path.join(
+                 "Assets/Cactus", "SmallCactus2.png")),
+             pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus3.png"))]
 
 Track = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
 
@@ -50,45 +52,62 @@ class Dinosaur:
         self.step = 0
         self.image = self.run_img[0]
         self.dino_rect = self.image.get_rect()
-        # self.jump_vel = self.Jump_vel
-        self.jump_vel = 0
-
-        self.gravity = 0.05
+        self.jump_vel = self.Jump_vel
 
         self.dino_rect.x = self.X_pos
         self.dino_rect.y = self.Y_pos
 
-    def update(self, userInput, prev):
-        self.animate()
+    def update(self, userInput):
+        # self.animate()
+        if(self.dino_jump):
+            self.jump()
 
-        if ((userInput[pygame.K_UP] and not prev[pygame.K_UP]) or (userInput[pygame.K_SPACE] and not prev[pygame.K_SPACE] and not self.dino_jump)):
-            self.jump_vel = -4
-            self.dino_jump = False
-
-    def animate(self):
-        self.jump_vel += self.gravity
-        if(self.jump_vel >= 50):
-            self.jump_vel = 50
-        self.dino_rect.y += self.jump_vel
-
-        if self.dino_rect.y >= self.Y_pos:
-            self.image = self.run_img[self.step // 5]
-            self.dino_rect.y = self.Y_pos
-            self.step += 1
-
-        if self.dino_rect.y < self.Y_pos:
-            self.image = self.jump_img
+        if(self.dino_run):
+            self.run()
 
         if self.step >= 10:
             self.step = 0
 
-        x = self.dino_rect
+        if((userInput[pygame.K_UP] or userInput[pygame.K_SPACE]) and not self.dino_jump):
+            self.dino_jump = True
+            self.dino_run = False
+        elif not self.dino_jump:
+            self.dino_jump = False
+            self.dino_run = True
+
+    def jump(self):
+        self.image = self.jump_img
+        if self.dino_jump:
+            self.dino_rect.y -= self.jump_vel*4
+            self.jump_vel -= 0.8
+        if self.jump_vel < -self.Jump_vel:
+            self.dino_jump = False
+            self.jump_vel = self.Jump_vel
+
+    def run(self):
+        self.image = self.run_img[self.step // 5]
         self.dino_rect = self.image.get_rect()
-        self.dino_rect.x = x.x
-        self.dino_rect.y = x.y
+        self.dino_rect.x = self.X_pos
+        self.dino_rect.y = self.Y_pos
+        self.step += 1
 
     def draw(self, Screen):
         Screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
+
+
+class Obstacle:
+    def __init__(self):
+        self.image = Obstacles[random.randint(0, 5)]
+        self.rect = self.image.get_rect(
+            topleft=(Screen_Width, 400-self.image.get_size()[1]))
+
+    def update(self):
+        self.rect.x -= game_speed
+        if self.rect.x < -self.rect.width:
+            obstacles.pop(0)
+
+    def draw(self, Screen):
+        Screen.blit(self.image, self.rect)
 
 
 class Cloud:
@@ -101,7 +120,7 @@ class Cloud:
     def update(self):
         self.x -= game_speed
         if self.x < -self.width:
-            self.x = Screen_Width + random.randint(2500, 3000)
+            self.x = Screen_Width
             self.y = random.randint(50, 100)
 
     def Draw(self, Screen):
@@ -112,7 +131,8 @@ def main():
     global game_speed, x_pos_bg, y_pos_bg, points, obstacles, highscore, run
     run = True
     player = Dinosaur()
-    game_speed = 1
+    clock = pygame.time.Clock()
+    game_speed = 20
     cloud = Cloud()
     x_pos_bg = 0
     y_pos_bg = 380
@@ -120,13 +140,12 @@ def main():
     highscore = 0
     font = pygame.font.Font('freesansbold.ttf', 20)
     obstacles = []
-    previous_key = 0
 
     def Score():
         global points, game_speed, highscore, run
         points += 1
 
-        if points % 10000 == 0:
+        if points % 100 == 0:
             game_speed += 1
 
             if run is False:
@@ -163,18 +182,27 @@ def main():
         Screen.fill((255, 255, 255))
 
         user_input = pygame.key.get_pressed()
+        if points % 50 == 0:
+            obstacles.append(Obstacle())
+
+        for obstacle in obstacles:
+            obstacle.draw(Screen)
+            obstacle.update()
+            if player.dino_rect.colliderect(obstacle.rect):
+                player.image = Dead
+                run = False
 
         background()
 
         player.draw(Screen)
-        player.update(user_input, previous_key)
-        previous_key = user_input
+        player.update(user_input)
 
         Score()
 
         cloud.Draw(Screen)
         cloud.update()
 
+        clock.tick(30)
         pygame.display.update()
 
 
