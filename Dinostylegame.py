@@ -14,7 +14,7 @@ Screen = pygame.display.set_mode((Screen_Width, Screen_Height))
 
 Running = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
            pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
-           
+
 ''' Running = [pygame.image.load(os.path.join("Assets", "art.png")),
            pygame.image.load(os.path.join("Assets", "art (1).png"))] '''
 
@@ -209,4 +209,29 @@ def main():
         pygame.display.update()
 
 
-main()
+''' main() '''
+
+
+def menu():
+    run = True
+    while run:
+        Screen.fill((0, 0, 0))
+
+        font = pygame.font.Font('freesansbold.ttf', 30)
+        text = font.render("Play", True, (255, 255, 255))
+        textrect = text.get_rect()
+        textrect.center = (550, 200)
+
+        Screen.blit(text, textrect)
+        pygame.draw.rect(Screen, (255, 255, 255), (480, 175,
+                         150, 50), 3, 30)
+        pygame.draw.circle(Screen, (255, 255, 255), (200, 200), 20, )
+
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+
+menu()
