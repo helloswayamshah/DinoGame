@@ -1,0 +1,3 @@
+https://github.com/punwai/Chrome-Dinosaur
+
+https://thecodezine.com/3-easy-ways-to-create-own-dino-game-in-python/
