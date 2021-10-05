@@ -193,7 +193,7 @@ def main():
             obstacle.update()
             if player.dino_rect.colliderect(obstacle.rect):
                 player.image = Dead
-                run = False
+                menu()
 
         background()
 
@@ -209,7 +209,7 @@ def main():
         pygame.display.update()
 
 
-''' main() '''
+""" main() """
 
 
 def menu():
@@ -217,15 +217,48 @@ def menu():
     while run:
         Screen.fill((0, 0, 0))
 
+        font = pygame.font.Font('freesansbold.ttf', 70)
+        text = font.render("Dino Game", True, (255, 255, 255))
+        textrect = text.get_rect()
+        textrect.center = (550, 100)
+
+        Screen.blit(text, textrect)
+
+        
+        user_input = pygame.key.get_pressed()
+
         font = pygame.font.Font('freesansbold.ttf', 30)
-        text = font.render("Play", True, (255, 255, 255))
+        text = font.render("Press P to Play", True, (255, 255, 255))
         textrect = text.get_rect()
         textrect.center = (550, 200)
 
         Screen.blit(text, textrect)
-        pygame.draw.rect(Screen, (255, 255, 255), (480, 175,
-                         150, 50), 3, 30)
-        pygame.draw.circle(Screen, (255, 255, 255), (200, 200), 20, )
+        pygame.draw.rect(Screen, (255, 255, 255), (400, 175, 300, 50), 3, 30)
+
+        if (user_input[pygame.K_p]):
+            main()
+
+        font = pygame.font.Font('freesansbold.ttf', 30)
+        text = font.render("Press L for Leaderboard", True, (255, 255, 255))
+        textrect = text.get_rect()
+        textrect.center = (550, 300)
+
+        Screen.blit(text, textrect)
+        pygame.draw.rect(Screen, (255, 255, 255), (350, 275, 400, 50), 3, 30)
+
+        if user_input[pygame.K_l]:
+            menu()
+
+        font = pygame.font.Font('freesansbold.ttf', 30)
+        text = font.render("Press Q to Quit", True, (255, 255, 255))
+        textrect = text.get_rect()
+        textrect.center = (550, 400)
+
+        Screen.blit(text, textrect)
+        pygame.draw.rect(Screen, (255, 255, 255), (400, 375, 300, 50), 3, 30)
+
+        if user_input[pygame.K_q]:
+            run = False
 
         pygame.display.update()
 
