@@ -2,7 +2,7 @@ from pygame import *
 import pygame as pygame
 import os
 import random
-import mysql.connector
+import csv
 
 pygame.init()
 
@@ -140,7 +140,7 @@ def main():
     x_pos_bg = 0
     y_pos_bg = 380
     points = 0
-    highscore = 0
+    highscore = []
     font = pygame.font.Font('freesansbold.ttf', 20)
     obstacles = []
 
@@ -212,9 +212,44 @@ def main():
 """ main() """
 
 
+def score():
+    run = True
+    while run:
+        global highscore
+        highscore = []
+
+        Screen.fill((0, 0, 0))
+
+        font = pygame.font.Font('freesansbold.ttf', 70)
+        text = font.render("Leaderboard", True, (255, 255, 255))
+        textrect = text.get_rect()
+        textrect.center = (550, 100)
+
+        Screen.blit(text, textrect)
+
+        file = open ('score.txt','w+')
+
+        file.writelines(highscore)
+
+
+
+
+        for x in range(1, 5):
+            read = file.readline()
+            score = read
+            font = pygame.font.Font('freesansbold.ttf', 70)
+            text = font.render(score, True, (255, 255, 255))
+            textrect = text.get_rect()
+            textrect.center = (550, 100)
+            Screen.blit(text, textrect)
+            pygame.draw.rect(Screen, (255, 255, 255), (400, 375, 300, 50), 3, 30)
+
+        file.close()
+
 def menu():
     run = True
     while run:
+
         Screen.fill((0, 0, 0))
 
         font = pygame.font.Font('freesansbold.ttf', 70)
@@ -224,7 +259,6 @@ def menu():
 
         Screen.blit(text, textrect)
 
-        
         user_input = pygame.key.get_pressed()
 
         font = pygame.font.Font('freesansbold.ttf', 30)
@@ -247,7 +281,7 @@ def menu():
         pygame.draw.rect(Screen, (255, 255, 255), (350, 275, 400, 50), 3, 30)
 
         if user_input[pygame.K_l]:
-            menu()
+            score()
 
         font = pygame.font.Font('freesansbold.ttf', 30)
         text = font.render("Press Q to Quit", True, (255, 255, 255))
