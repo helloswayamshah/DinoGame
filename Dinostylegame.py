@@ -275,23 +275,12 @@ def menu():
             main()
 
         font = pygame.font.Font('freesansbold.ttf', 30)
-        text = font.render("Press L for Leaderboard", True, (255, 255, 255))
+        text = font.render("Press Q to Quit", True, (255, 255, 255))
         textrect = text.get_rect()
         textrect.center = (550, 300)
 
         Screen.blit(text, textrect)
-        pygame.draw.rect(Screen, (255, 255, 255), (350, 275, 400, 50), 3, 30)
-
-        if user_input[pygame.K_l]:
-            score()
-
-        font = pygame.font.Font('freesansbold.ttf', 30)
-        text = font.render("Press Q to Quit", True, (255, 255, 255))
-        textrect = text.get_rect()
-        textrect.center = (550, 400)
-
-        Screen.blit(text, textrect)
-        pygame.draw.rect(Screen, (255, 255, 255), (400, 375, 300, 50), 3, 30)
+        pygame.draw.rect(Screen, (255, 255, 255), (400, 275, 300, 50), 3, 30)
 
         if user_input[pygame.K_q]:
             run = False
