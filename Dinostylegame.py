@@ -2,7 +2,6 @@ from pygame import *
 import pygame as pygame
 import os
 import random
-import csv
 
 pygame.init()
 
@@ -14,9 +13,6 @@ Screen = pygame.display.set_mode((Screen_Width, Screen_Height))
 
 Running = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
            pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
-
-''' Running = [pygame.image.load(os.path.join("Assets", "art.png")),
-           pygame.image.load(os.path.join("Assets", "art (1).png"))] '''
 
 Jumping = pygame.image.load(os.path.join("Assets/Dino", "DinoJump.png"))
 
@@ -217,10 +213,7 @@ def main():
         pygame.display.update()
 
 
-""" main() """
-
-
-def score():
+''' def score():
     run = True
     while run:
         global highscore
@@ -250,7 +243,7 @@ def score():
             pygame.draw.rect(Screen, (255, 255, 255),
                              (400, 375, 300, 50), 3, 30)
 
-        file.close()
+        file.close() '''
 
 
 def menu():
