@@ -40,6 +40,16 @@ Clouds = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
 pygame.display.set_caption("Dino Game")
 
 
+run = True
+highscore = 0
+game_speed = 1
+x_pos_bg = 0
+y_pos_bg = 0
+points = 0
+obstacles = []
+l = 0
+
+
 class Dinosaur:
     X_pos = 80
     Y_pos = 310
@@ -131,7 +141,7 @@ class Cloud:
 
 
 def main():
-    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, highscore, run, l
+    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, highscore, run
     run = True
     player = Dinosaur()
     clock = pygame.time.Clock()
@@ -140,8 +150,6 @@ def main():
     x_pos_bg = 0
     y_pos_bg = 380
     points = 0
-    highscore = [0]
-    l = len(highscore)
     font = pygame.font.Font('freesansbold.ttf', 20)
     obstacles = []
 
@@ -152,18 +160,12 @@ def main():
         if points % 100 == 0:
             game_speed += 1
 
-            if run is False:
-                l = len(highscore)
-                if points > highscore[l-1]:
-                    highscore.append(points)
-
         text = font.render("Score: " + str(points), True, (0, 0, 0))
         textrect = text.get_rect()
         textrect.center = (1000, 40)
         Screen.blit(text, textrect)
 
-
-        text1 = font.render("HI: " + str(highscore[l-1]), True, (0, 0, 0))
+        text1 = font.render("HI: " + str(highscore), True, (0, 0, 0))
         text1rect = text1.get_rect()
         text1rect.center = (875, 40)
         Screen.blit(text1, text1rect)
@@ -196,6 +198,9 @@ def main():
             obstacle.update()
             if player.dino_rect.colliderect(obstacle.rect):
                 player.image = Dead
+                run = False
+                if points > highscore:
+                    highscore = points
                 menu()
 
         background()
@@ -219,7 +224,7 @@ def score():
     run = True
     while run:
         global highscore
-        highscore = [0]
+        highscore = 0
 
         Screen.fill((0, 0, 0))
 
@@ -251,6 +256,17 @@ def score():
 def menu():
     run = True
     while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                exit()
+        user_input = pygame.key.get_pressed()
+
+        if (user_input[pygame.K_p]):
+            main()
+
+        if user_input[pygame.K_q]:
+            run = False
 
         Screen.fill((0, 0, 0))
 
@@ -261,8 +277,6 @@ def menu():
 
         Screen.blit(text, textrect)
 
-        user_input = pygame.key.get_pressed()
-
         font = pygame.font.Font('freesansbold.ttf', 30)
         text = font.render("Press P to Play", True, (255, 255, 255))
         textrect = text.get_rect()
@@ -270,9 +284,6 @@ def menu():
 
         Screen.blit(text, textrect)
         pygame.draw.rect(Screen, (255, 255, 255), (400, 175, 300, 50), 3, 30)
-
-        if (user_input[pygame.K_p]):
-            main()
 
         font = pygame.font.Font('freesansbold.ttf', 30)
         text = font.render("Press Q to Quit", True, (255, 255, 255))
@@ -282,14 +293,7 @@ def menu():
         Screen.blit(text, textrect)
         pygame.draw.rect(Screen, (255, 255, 255), (400, 275, 300, 50), 3, 30)
 
-        if user_input[pygame.K_q]:
-            run = False
-
         pygame.display.update()
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
 
 
 menu()
