@@ -33,7 +33,7 @@ Track = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
 
 Clouds = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
 
-pygame.display.set_caption("Dino Game")
+pygame.display.set_caption("Dino Run")
 
 
 run = True
@@ -264,7 +264,7 @@ def menu():
         Screen.fill((0, 0, 0))
 
         font = pygame.font.Font('freesansbold.ttf', 70)
-        text = font.render("Dino Game", True, (255, 255, 255))
+        text = font.render("Dino Run", True, (255, 255, 255))
         textrect = text.get_rect()
         textrect.center = (550, 100)
 
