@@ -2,6 +2,7 @@ from pygame import *
 import pygame as pygame
 import os
 import random
+import csv
 
 pygame.init()
 
@@ -39,6 +40,7 @@ pygame.display.set_caption("Dino Run")
 run = True
 highscore = 0
 game_speed = 1
+score = 0
 x_pos_bg = 0
 y_pos_bg = 0
 points = 0
@@ -135,9 +137,12 @@ class Cloud:
     def Draw(self, Screen):
         Screen.blit(self.image, (self.x, self.y))
 
+    
+
+
 
 def main():
-    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, highscore, run
+    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, highscore, run, score
     run = True
     player = Dinosaur()
     clock = pygame.time.Clock()
@@ -195,6 +200,7 @@ def main():
             if player.dino_rect.colliderect(obstacle.rect):
                 player.image = Dead
                 run = False
+                print(score)
                 if points > highscore:
                     highscore = points
                 menu()
@@ -213,38 +219,55 @@ def main():
         pygame.display.update()
 
 
-''' def score():
+def highscore_page():
     run = True
     while run:
-        global highscore
-        highscore = 0
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                exit()
 
         Screen.fill((0, 0, 0))
-
         font = pygame.font.Font('freesansbold.ttf', 70)
         text = font.render("Leaderboard", True, (255, 255, 255))
         textrect = text.get_rect()
         textrect.center = (550, 100)
 
         Screen.blit(text, textrect)
+        if (pygame.key.get_pressed()[pygame.K_ESCAPE]):
+            menu()
 
-        file = open('score.txt', 'w+')
 
-        file.writelines(highscore)
+        file = open('score.csv', 'r')
+        filereader = csv.reader(file)
+        ypos = 190
+        inde = 0
+        for inde in range(2):
+            for x in filereader:
+                serialno = x[0]
+                score = x[1]    
+                font = pygame.font.Font('freesansbold.ttf', 30)
+                text1 = font.render(serialno, True, (255, 255, 255))
+                text2 = font.render(score, True, (255, 255, 255))
+                textrect1 = text1.get_rect()
+                textrect2 = text2.get_rect()
+                textrect1.center = (475, ypos)
+                textrect2.center = (600,ypos)
+                Screen.blit(text1, textrect1)
+                Screen.blit(text2, textrect2)
+                ypos +=50
+                inde+=1 
 
-        for x in range(1, 5):
-            read = file.readline()
-            score = read
-            font = pygame.font.Font('freesansbold.ttf', 70)
-            text = font.render(score, True, (255, 255, 255))
-            textrect = text.get_rect()
-            textrect.center = (550, 100)
-            Screen.blit(text, textrect)
-            pygame.draw.rect(Screen, (255, 255, 255),
-                             (400, 375, 300, 50), 3, 30)
+        
+        file.close()
+        font = pygame.font.Font('freesansbold.ttf', 30)
+        text = font.render("Press Esc to go Back", True, (255, 255, 255))
+        textrect = text.get_rect()
+        textrect.center = (550, 500)
 
-        file.close() '''
-
+        Screen.blit(text, textrect)
+        pygame.draw.rect(Screen, (255, 255, 255), (360, 475, 375, 50), 3, 30)
+        pygame.display.update()
 
 def menu():
     run = True
@@ -257,6 +280,9 @@ def menu():
 
         if (user_input[pygame.K_p]):
             main()
+
+        if (user_input[pygame.K_l]):
+            highscore_page()
 
         if user_input[pygame.K_q]:
             run = False
@@ -279,12 +305,21 @@ def menu():
         pygame.draw.rect(Screen, (255, 255, 255), (400, 175, 300, 50), 3, 30)
 
         font = pygame.font.Font('freesansbold.ttf', 30)
-        text = font.render("Press Q to Quit", True, (255, 255, 255))
+        text = font.render("Press L for Leaderboard", True, (255, 255, 255))
         textrect = text.get_rect()
         textrect.center = (550, 300)
 
         Screen.blit(text, textrect)
-        pygame.draw.rect(Screen, (255, 255, 255), (400, 275, 300, 50), 3, 30)
+        pygame.draw.rect(Screen, (255, 255, 255), (325, 275, 450, 50), 3, 30)
+
+
+        font = pygame.font.Font('freesansbold.ttf', 30)
+        text = font.render("Press Q to Quit", True, (255, 255, 255))
+        textrect = text.get_rect()
+        textrect.center = (550, 400)
+
+        Screen.blit(text, textrect)
+        pygame.draw.rect(Screen, (255, 255, 255), (400, 375, 300, 50), 3, 30)
 
         pygame.display.update()
 
