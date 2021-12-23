@@ -142,7 +142,7 @@ class Cloud:
 
 
 def main():
-    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, highscore, run, score
+    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, highscore, run, score 
     run = True
     player = Dinosaur()
     clock = pygame.time.Clock()
@@ -153,6 +153,7 @@ def main():
     points = 0
     font = pygame.font.Font('freesansbold.ttf', 20)
     obstacles = []
+    
 
     def Score():
         global points, game_speed, highscore, run, l
@@ -200,7 +201,11 @@ def main():
             if player.dino_rect.colliderect(obstacle.rect):
                 player.image = Dead
                 run = False
-                print(score)
+                ''' file = open('score.csv','a')
+                filewriter = csv.writer(file)
+                scoredata = [playername,points]
+                filewriter.writerow(scoredata)
+                file.close() '''
                 if points > highscore:
                     highscore = points
                 menu()
@@ -241,22 +246,29 @@ def highscore_page():
         file = open('score.csv', 'r')
         filereader = csv.reader(file)
         ypos = 190
-        inde = 0
-        for inde in range(2):
-            for x in filereader:
+        count = 0
+        first = 1
+        for x in filereader:
+            if count < 6:
                 serialno = x[0]
-                score = x[1]    
+                score = x[1]
+                if first == 1:
+                    pygame.draw.line(Screen,(255,255,255),(350,ypos+20),(740,ypos+20),2)
+                    first = 0    
                 font = pygame.font.Font('freesansbold.ttf', 30)
                 text1 = font.render(serialno, True, (255, 255, 255))
                 text2 = font.render(score, True, (255, 255, 255))
                 textrect1 = text1.get_rect()
                 textrect2 = text2.get_rect()
-                textrect1.center = (475, ypos)
-                textrect2.center = (600,ypos)
+                textrect1.center = (450, ypos)
+                textrect2.center = (675,ypos)
                 Screen.blit(text1, textrect1)
                 Screen.blit(text2, textrect2)
                 ypos +=50
-                inde+=1 
+                count+=1
+            else:
+                pass
+             
 
         
         file.close()
@@ -286,6 +298,7 @@ def menu():
 
         if user_input[pygame.K_q]:
             run = False
+            exit()
 
         Screen.fill((0, 0, 0))
 
