@@ -201,11 +201,11 @@ def main():
             if player.dino_rect.colliderect(obstacle.rect):
                 player.image = Dead
                 run = False
-                ''' file = open('score.csv','a')
+                file = open('score.csv','a')
                 filewriter = csv.writer(file)
                 scoredata = [playername,points]
                 filewriter.writerow(scoredata)
-                file.close() '''
+                file.close()
                 if points > highscore:
                     highscore = points
                 menu()
@@ -281,6 +281,37 @@ def highscore_page():
         pygame.draw.rect(Screen, (255, 255, 255), (360, 475, 375, 50), 3, 30)
         pygame.display.update()
 
+def nameinputpage():
+
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                exit()
+
+        Screen.fill((0, 0, 0))
+        font = pygame.font.Font('freesansbold.ttf', 50)
+        text = font.render("Please Enter Your Name", True, (255, 255, 255))
+        textrect = text.get_rect()
+        textrect.center = (550, 100)
+
+        Screen.blit(text, textrect)
+        if (pygame.key.get_pressed()[pygame.K_ESCAPE]):
+            menu()
+
+        input_rect = pygame.Rect(360, 250, 375, 50)
+        
+        color_active = pygame.Color('grey')
+        color_passive = pygame.Color('white')
+        color = color_passive
+
+        pygame.draw.rect(Screen, color, input_rect)
+
+        pygame.display.update()
+
+
+
 def menu():
     run = True
     while run:
@@ -291,7 +322,7 @@ def menu():
         user_input = pygame.key.get_pressed()
 
         if (user_input[pygame.K_p]):
-            main()
+            nameinputpage()
 
         if (user_input[pygame.K_l]):
             highscore_page()
